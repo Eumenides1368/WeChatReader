@@ -11,6 +11,7 @@
 import { ebookMixin } from '../../utils/mixin'
 import Epub from 'epubjs'
 import { getFontFamily, saveFontFamily, getFontSize, saveFontSize, getTheme, saveTheme, getSection, saveSection, getLocation } from '../../utils/localStorage'
+import { flatten } from '../../utils/book'
 global.ePub = Epub
 export default {
   // computed: {
@@ -117,6 +118,26 @@ export default {
       })
       this.book.loaded.metadata.then(metadata => {
         this.setMetadata(metadata)
+      })
+      this.book.loaded.navigation.then(nav => {
+        // console.log(nav)
+        let navItem = flatten(nav.toc)
+        // console.log(navItem)
+        // 寻找父元素
+        function find (item, level = 0) {
+          // return !item.parent ? level : find(navItem.filter(parentItem => parentItem.id === item.parent), ++level)
+          if (!item.parent) {
+            return level
+          } else {
+            return find(navItem.filter(parentItem => parentItem.id === item.parent), ++level)
+          }
+        }
+        navItem.forEach(item => {
+          item.level = find(item)
+          // console.log(item.id + ': ' + item.level)
+        })
+        // console.log(navItem)
+        this.setNavigation(navItem)
       })
     },
     initEpub () {

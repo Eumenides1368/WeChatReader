@@ -98,3 +98,8 @@ export function getTimeByMinute (fileName) {
     return Math.ceil(readTime / 60)
   }
 }
+
+// 将树状结构转为一维数组
+export function flatten (array) {
+  return [].concat(...array.map(item => [].concat(item, ...flatten(item.subitems))))
+}
