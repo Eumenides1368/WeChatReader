@@ -1,13 +1,12 @@
 <!-- 滚动条插件 -->
 <template>
-  <div class="scroll-wrapper" :class="{'noScroll': ifNoScroll}" @scroll.passive="handleScroll" ref="scroll-wrapper">
+  <div class="scroll-wrapper" :class="{'noScroll': ifNoScroll}" @scroll.passive="handleScroll()" ref="scrollWrapper">
     <slot></slot>
   </div>
 </template>
 
 <script>
-import { realPx } from '../utils/utils'
-import { documentHeight } from 'epubjs/types/utils/core';
+import { realPx } from '../../utils/utils'
 export default {
   props: {
     top: {
@@ -21,16 +20,16 @@ export default {
     ifNoScroll: {
       type: Boolean,
       default: false
-    },
-    initPosition: {
-      type: Object,
-      default: () => {
-        return {
-          x: 0,
-          y: 0
-        }
-      }
     }
+    // initPosition: {
+    //   type: Object,
+    //   default: () => {
+    //     return {
+    //       x: 0,
+    //       y: 0
+    //     }
+    //   }
+    // }
   },
   methods: {
     handleScroll (e) {
@@ -46,6 +45,9 @@ export default {
         this.$refs.scrollWrapper.addEventListener('scroll', this.handleScroll)
       }
     }
+  },
+  mounted () {
+    this.refresh()
   }
 }
 </script>
@@ -55,7 +57,13 @@ export default {
   position: relative;
   z-index: 100;
   width: 100%;
-  @include scroll;
+  overflow-x: scroll;
+  overflow-y: scroll;
+  // 解决移动端卡顿
+  -webkit-overflow-scrolling: touch;
+  &::-webkit-scrollbar {
+    display: none;
+  }
   &.no-scroll {
     overflow: hidden;
   }

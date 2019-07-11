@@ -41,15 +41,16 @@ export default {
   mixins: [ebookMixin],
   computed: {
     getSectionName () {
-      let value = ''
-      if (this.section) {
-        const sectionInfo = this.currentBook.section(this.section)
-        if (sectionInfo && sectionInfo.href && this.currentBook && this.currentBook.navigation) {
-          // value = this.currentBook.navigation.get(sectionInfo.href).label
-          value = this.currentBook.navigation.get(sectionInfo.href).label
-        }
-      }
-      return value
+      // let value = ''
+      // if (this.section) {
+      //   const sectionInfo = this.currentBook.section(this.section)
+      //   if (sectionInfo && sectionInfo.href && this.currentBook && this.currentBook.navigation) {
+      //     // value = this.currentBook.navigation.get(sectionInfo.href).label
+      //     value = this.currentBook.navigation.get(sectionInfo.href).label
+      //   }
+      // }
+      // return value
+      return this.section ? this.navigation[this.section].label : ''
     }
   },
   methods: {
@@ -66,9 +67,6 @@ export default {
     },
     displayProgress () {
       const cfi = this.currentBook.locations.cfiFromPercentage(this.progress / 100)
-      // this.currentBook.rendition.display(cfi).then(() => {
-      //   this.getCurrentLocation()
-      // })
       this.display(cfi)
     },
     updateProgressBg () {
@@ -95,23 +93,9 @@ export default {
     displaySection () {
       const sectionInfo = this.currentBook.section(this.section)
       if (sectionInfo && sectionInfo.href) {
-        // this.currentBook.rendition.display(sectionInfo.href).then(() => {
-        //   this.getCurrentLocation()
-        // })
         this.display(sectionInfo.href)
       }
     }
-    // getReadTimeText () {
-    //   return this.$t('book.haveRead').replace('$1', this.getTimeByMinute())
-    // }
-    // getTimeByMinute () {
-    //   const readTime = getReadTime()
-    //   if (!readTime) {
-    //     return 0
-    //   } else {
-    //     return Math.ceil(readTime / 60)
-    //   }
-    // }
   },
   updated () {
     this.updateProgressBg()
